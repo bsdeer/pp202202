@@ -41,7 +41,6 @@ object Main {
     sumIter(0, a, b)
   }
 
-
   /**
    * Exercise 1-2: fold
    *
@@ -52,11 +51,10 @@ object Main {
    * We guarantee that any (f, a, b) in the test set will not raise integer overflow.
    */
   def fold(f: (Long, Long) => Long, a: Long, b: Long): Long = {
-    @tailrec def foldIter(func: (Long, Long) => Long, l: Long, r: Long): Long =
-      if (l >= r) 0 else foldIter(func, l, func(r-1,r))
-    foldIter(f, a, b)
+    @tailrec def foldIter(res: Long, func: (Long, Long) => Long, l: Long, r: Long): Long =
+      if (l >= r) res else foldIter(res+ func(r-1,r),func, l, r-2)
+    foldIter(0, f, a, b)
   }
-
 
   /**
    * Exercise 2: Binomial Coefficient
@@ -74,7 +72,6 @@ object Main {
   def coeff(n: Long, k: Long): Long = {
     @tailrec def gcd(a: Long, b: Long) : Long =
       if (a%b == 0) b else gcd(b, a%b)
-
 //    def coeffIter(n: Long, k: Long): Long =
     if (n==k || k==0) 1 else coeff(n-1, k-1) + coeff(n-1, k)
   }
@@ -97,7 +94,7 @@ object Main {
    **/
   def terminate(pred: Long => Boolean, f: Long => Long, init: Long): Long = {
     @tailrec def termIter(res:Long, pred: Long => Boolean, f: Long => Long, init: Long): Long =
-      if (!pred(f(init))) termIter(res+1, pred, f, f(init)) else res
+      if (!pred(f(init))) termIter(res+1, pred, f, f(init)) else res+1
     termIter(0, pred, f, init)
   }
 }
