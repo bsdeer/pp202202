@@ -52,9 +52,9 @@ object Main {
    * We guarantee that any (f, a, b) in the test set will not raise integer overflow.
    */
   def fold(f: (Long, Long) => Long, a: Long, b: Long): Long = {
-    @tailrec def foldIter(res: Long, func: (Long, Long) => Long, l: Long, r: Long): Long =
-      if (l >= r) 0 else foldIter(func(l,l+1), func,  l+2, r)
-    foldIter(0, f, a, b)
+    @tailrec def foldIter(func: (Long, Long) => Long, l: Long, r: Long): Long =
+      if (l >= r) 0 else foldIter(func, l, func(r-1,r))
+    foldIter(f, a, b)
   }
 
 
@@ -71,7 +71,13 @@ object Main {
    * Hint: Find an appropriate formula from the above link.
    * Hint 2: GCD
    **/
-  def coeff(n: Long, k: Long): Long = ???
+  def coeff(n: Long, k: Long): Long = {
+    @tailrec def gcd(a: Long, b: Long) : Long =
+      if (a%b == 0) b else gcd(b, a%b)
+
+//    def coeffIter(n: Long, k: Long): Long =
+    if (n==k || k==0) 1 else coeff(n-1, k-1) + coeff(n-1, k)
+  }
 
   /**
    * Exercise 3: Termination checker
@@ -89,5 +95,9 @@ object Main {
    * We guarantee that every input in the test set will always
    *   terminate the checker if your checker is correct and efficient.
    **/
-  def terminate(pred: Long => Boolean, f: Long => Long, init: Long): Long = ???
+  def terminate(pred: Long => Boolean, f: Long => Long, init: Long): Long = {
+    @tailrec def termIter(res:Long, pred: Long => Boolean, f: Long => Long, init: Long): Long =
+      if (!pred(f(init))) termIter(res+1, pred, f, f(init)) else res
+    termIter(0, pred, f, init)
+  }
 }
