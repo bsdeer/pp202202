@@ -51,9 +51,9 @@ object Main {
    * We guarantee that any (f, a, b) in the test set will not raise integer overflow.
    */
   def fold(f: (Long, Long) => Long, a: Long, b: Long): Long = {
-    @tailrec def foldIter(res: Long, func: (Long, Long) => Long, l: Long, r: Long): Long =
-      if (l >= r) res else foldIter(res+ func(r-1,r),func, l, r-2)
-    foldIter(0, f, a, b)
+    @tailrec def foldIter(res: Long, rpos: Long, f: (Long, Long) => Long): Long =
+      if (a>=b) 0 else if (a >= rpos) f(rpos, res) else foldIter(f(rpos, res), rpos-1, f)
+    foldIter(b, b-1, f)
   }
 
   /**
@@ -72,8 +72,10 @@ object Main {
   def coeff(n: Long, k: Long): Long = {
     @tailrec def gcd(a: Long, b: Long) : Long =
       if (a%b == 0) b else gcd(b, a%b)
-//    def coeffIter(n: Long, k: Long): Long =
-    if (n==k || k==0) 1 else coeff(n-1, k-1) + coeff(n-1, k)
+    @tailrec def coeffIter(res: Long, n: Long, k: Long, kv: Long, iter: Long): Long = {
+      if(iter ==0 || n==k) res else coeffIter(res*n/gcd(res*n, kv), n-1, k-1, kv*(k-1)/gcd(res*n, kv), iter-1)
+    }
+    coeffIter(1,n, k,k,k)
   }
 
   /**
