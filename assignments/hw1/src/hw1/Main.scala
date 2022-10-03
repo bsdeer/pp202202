@@ -72,8 +72,9 @@ object Main {
   def coeff(n: Long, k: Long): Long = {
     @tailrec def gcd(a: Long, b: Long) : Long =
       if (a%b == 0) b else gcd(b, a%b)
+
     @tailrec def coeffIter(res: Long, n: Long, k: Long, kv: Long, iter: Long): Long = {
-      if(iter ==0 || n==k) res else coeffIter(res*n/gcd(res*n, kv), n-1, k-1, kv*(k-1)/gcd(res*n, kv), iter-1)
+      if(iter == 0 || n==k) res else coeffIter(res*n/gcd(res*n, kv), n-1, k-1, kv*(k-1)/gcd(res*n, kv), iter-1)
     }
     coeffIter(1,n, k,k,k)
   }
@@ -96,7 +97,7 @@ object Main {
    **/
   def terminate(pred: Long => Boolean, f: Long => Long, init: Long): Long = {
     @tailrec def termIter(res:Long, pred: Long => Boolean, f: Long => Long, init: Long): Long =
-      if (!pred(f(init))) termIter(res+1, pred, f, f(init)) else res+1
+      if(pred(init) && res==0) 0 else if (!pred(f(init))) termIter(res+1, pred, f, f(init)) else res+1
     termIter(0, pred, f, init)
   }
 }
