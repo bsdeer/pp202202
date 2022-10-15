@@ -59,13 +59,8 @@ object Main {
         val d: D
       }
 
-      /**
-       * WRITE YOUR ANSWER
-       */
-      type CommonTy = ???
     }
   }
-
 
   /**
    * Problem 2: Reversed Binary Representation (5 points each)
